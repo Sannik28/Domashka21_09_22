@@ -26,6 +26,15 @@ void udal(char *stroka, int n) {
         cout << *(stroka2 + i);
     }
 }
+// вариант разобранный на уроке
+char* udal2(char* stroka, int n) {
+    char* new_arr = new char[strlen(stroka) - 1];
+    strncpy_s(new_arr, strlen(stroka), stroka, n - 1);
+    strcat_s(new_arr, strlen(stroka), stroka + n);
+    delete[]stroka;
+    return new_arr;
+}
+
 //Задание 2 удалить все вхождения заданного символа
 void udalsimv(char* stroka, char s)
 {
@@ -49,50 +58,111 @@ void udalsimv(char* stroka, char s)
         }
 }
 
+//вариант разобранный на уроке, очень интересный
+char* udalsimv2(char* stroka, char s) {
+    char* new_stroka = new char[256]{ "" };
+    char* temp_stroka;
+    while (temp_stroka = strchr(stroka, s)) {
+        strncat_s(new_stroka, 256, stroka,
+        strlen(stroka) - strlen(temp_stroka));
+        stroka = ++temp_stroka;
+    }
+    strcat_s(new_stroka, 256, stroka);
+
+    return new_stroka;
+}
+
 //Задание 3 вставить в строку в заданную позицию заданный символ
-void vstav(char* stroka, char s, int n)
-{
-    char* stroka2 = new char[strlen(stroka) + 1];
-    strncpy(stroka2, stroka, n - 1);
+
+char* vstav(char* stroka, char s, int n) {
+    char* new_str = new char[strlen(stroka) + 1];
+    strncpy_s(new_str, n + 2, stroka, n + 1);
+    *(new_str + n) = s;
+    strcat_s(new_str, strlen(stroka) + 2, stroka + n);
+    return new_str;
 }
-/*
-{
-    char* stroka2 = new char[strlen(stroka) + 1];
-    strcpy_s(stroka2, n, "");
-    strncat_s(stroka2, strlen(stroka) - n, stroka, n+1);
-    *(stroka2 + n) = s;
-    strcat_s(stroka2, strlen(stroka) + n, stroka + n);
-    cout << stroka2;
-}
-*/
 
 //Задание 4 Программа заменяет "." на "!"
-
-
-
-/*
-//эта не работает оставляю на подумать
-void vstav(char* stroka, char s, int n)
-{
-    int t = strlen(stroka) + 1;
-    char* stroka2 = new char[t];
-    for (int i=0, j=0; i<t-1; ++i, ++j)
-    {
-        if (i == n - 1) {
-            *(stroka2 + j) = s; cout << *(stroka2 + j)<<endl; j++;
-        }
-        else {
-            *(stroka2 + j) = *(stroka + i);
-            cout << *(stroka2 + j)<<endl;
-        }
+char* f4(char* stroka) {
+    char* temp;
+    while (temp = strchr(stroka, '.')) {
+        *temp = '!';
+        strcpy_s(stroka + (strlen(stroka) - strlen(temp)),strlen(stroka),temp);
     }
-     for (int i = 0; i < strlen(stroka2); i++)
-    {
-        cout << *(stroka2 + i);
-    }
-   
+    return stroka;
 }
-*/
+
+//Задание 5: посчитать сколько раз он встречается строке исходный символ.
+int f5(char* stroka, int s) {
+    char* temp;
+    int count = 0;
+    while (temp = strchr(stroka, s)) {
+        count++;
+        stroka = ++temp;
+    }
+    return count;
+}
+//Задание 6: Определить количество букв, цифр и остальных символов
+//оно же задание 8
+    void f6(char* stroka) {
+    int n = 0, c = 0, o = 0;
+    for (int i = 0; i < strlen(stroka); i++) {
+        //первый вариант
+        if (stroka[i] >= 48 && stroka[i] <= 57)
+            n++;
+        else if (stroka[i] >= 65 && stroka[i] <= 90 ||
+            stroka[i] >= 97 && stroka[i] <= 122)
+            c++;
+        else
+            o++;
+        //второй вариант
+        if (isdigit(stroka[i]))
+            n++;
+        else if (isalpha(stroka[i]))
+            c++;
+        else
+            o++;
+    }
+    cout << n << " " << c << " " << o;
+}
+
+  //  Задание 7: Заменить все пробелы на табуляции.
+        char* f7(char* stroka) {
+        char* temp;
+        while (temp = strchr(stroka, ' ')) {
+            *temp = '\t';
+            //можно я оставлю в своей домашке ваши комментарии? Чтобы пользоваться в будущем если потребуется вспомнить.
+            strcpy_s(
+                stroka + (strlen(stroka) - strlen(temp)), // куда копируем (со сдвигом по указетлю)
+                strlen(stroka), // буферная память для копирования
+                temp); // что копируем
+        }
+        return stroka;
+    }
+       // Задание 9:Подсчитать количество слов во введенном предложении.
+          
+            int f9(char* stroka) {
+            char* temp;
+            int count = 1;
+            while (temp = strchr(stroka, ' ')) {
+                count++;
+                stroka = ++temp;
+            }
+            return count;
+        }
+//Задание 10: Проверка полиндрома (задание по типу выполняемого на уроке от 18.09
+            char* f10(char* stroka) {
+            char* str = new char[256];
+            for (int i = 0, j = 0; i < strlen(stroka) + 1; i++) {
+                if (stroka[i] != ' ') {
+                    str[j] = stroka[i];
+                    j++;
+                }
+            }
+            delete[]stroka;
+            if (_stricmp(str, _strrev(str)) == 0) cout << "палиндром";
+            else cout << "Нет"; 
+}
 
 
 int main()
@@ -117,6 +187,7 @@ int main()
     udalsimv(stroka, s);
     */
     //Задание 3
+    /*
     char s;
     cout << "Введите вставляемый символ\n";
     cin >> s;
@@ -124,6 +195,41 @@ int main()
     cout << "Введите номер позиции\n";
     cin >> n;
     vstav(stroka, s, n);
+    */
+    //Задание 4
+    /*
+    f4(stroka);
+    */
+    //Задание 5
+    /*
+    char s;
+    cout << "Введите искомый символ\n";
+    cin >> s;
+    f5(stroka, s);
+    */
+    //Задание 6
+    /*
+    f6(stroka);
+    */
+    //Задание 7
+    /*
+    f7(stroka);
+    */
+    //Задание 8
+    /*
+    f6(stroka);
+    */
+    //Задание 9
+    /*
+    f9(stroka);
+    */
+    //Задание 10
+    f10(stroka);
+
+
+
+
+
 }
 
 // Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
